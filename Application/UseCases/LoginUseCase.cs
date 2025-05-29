@@ -1,0 +1,40 @@
+﻿using Application.Interfaces;
+using Domain.Requests;
+using Domain.Responses;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using Shared.Configuration;
+using Shared.Extensions;
+using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+using System.Security.Claims;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Application.UseCases
+{
+    public class LoginUseCase : ILoginUseCase
+    {
+        private Variaveis _config;
+
+        public LoginUseCase(IOptions<Variaveis> config)
+        {
+            _config = config.Value;
+        }
+
+        public async Task<LoginResponse> ExecuteAsync(LoginRequest request)
+        {
+            // Validação de entrada
+            if (string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Password))
+            {
+                return new LoginResponse(false, null, "Email e senha são obrigatórios");
+            }
+
+            return new LoginResponse(true, request.Email.GerarTokenJWT(_config.JWT), "Login realizado com sucesso");
+        }
+
+
+    }
+}

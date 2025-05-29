@@ -1,9 +1,14 @@
+using Application.Interfaces;
+using Application.UseCases;
+using Domain.Responses;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Shared.Configuration;
 using System;
 
 namespace ApiPay
@@ -13,6 +18,10 @@ namespace ApiPay
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            builder.Services.Configure<Variaveis>(builder.Configuration.GetSection("Variaveis"));
+            builder.Services.AddScoped<ILoginUseCase, LoginUseCase>();
+
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(c =>
@@ -63,16 +72,28 @@ namespace ApiPay
                 });
 
             // Login Endpoint
-            app.MapPost("/api/login", async () =>
+            app.MapPost("/api/login", async (Domain.Requests.LoginRequest request, ILoginUseCase loginUseCase) =>
             {
-                return Results.Ok("Teste");
+                try
+                {
+                    var result = await loginUseCase.ExecuteAsync(request);
+
+                    if (result.IsSuccess)
+                        return Results.Ok(result);
+
+                    return Results.BadRequest(result);
+                }
+                catch (Exception ex)
+                {
+                    return Results.Problem(ex.Message);
+                }
             })
             .WithName("Login")
             .WithSummary("Autenticação de usuário")
             .WithDescription("Realiza login e retorna token para autenticação")
             .WithTags("Autenticação")
-            .Produces(200)
-            .Produces(400)
+            .Produces<LoginResponse>(200)
+            .Produces(401)
             .Produces(500)
             .WithOpenApi(operation =>
             {
