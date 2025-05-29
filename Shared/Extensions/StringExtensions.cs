@@ -28,13 +28,41 @@ namespace Shared.Extensions
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(key),
                     SecurityAlgorithms.HmacSha256Signature
-                )
+                ),
+                
             };
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
         }
 
+        public static ClaimsPrincipal? ValidarJWT(this string token, string secretKey)
+        {
+            var key = Encoding.UTF8.GetBytes(secretKey);
+            var tokenHandler = new JwtSecurityTokenHandler();
+
+            var validationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(key),
+                ValidateLifetime = true,
+                ClockSkew = TimeSpan.Zero
+            };
+
+            try
+            {
+                var jwtConvertido = tokenHandler.ValidateToken(token, validationParameters, out _);
+                return jwtConvertido;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }            
+        }
+
     }
+
     
 }

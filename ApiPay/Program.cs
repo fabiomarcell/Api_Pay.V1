@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Shared.Configuration;
+using Shared.Extensions;
 using System;
 
 namespace ApiPay
@@ -63,16 +64,15 @@ namespace ApiPay
 
             var app = builder.Build();
 
-                app.UseSwagger();
-                app.UseSwaggerUI(c =>
-                {
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "API Pay v1");
-                    c.RoutePrefix = string.Empty; 
-                    c.DocumentTitle = "Api Pay";
-                });
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "API Pay v1");
+                c.RoutePrefix = string.Empty;
+                c.DocumentTitle = "Api Pay";
+            });
 
-            // Login Endpoint
-            app.MapPost("/api/login", async (Domain.Requests.LoginRequest request, ILoginUseCase loginUseCase) =>
+            app.MapPost("/login", async (Domain.Requests.LoginRequest request, ILoginUseCase loginUseCase) =>
             {
                 try
                 {

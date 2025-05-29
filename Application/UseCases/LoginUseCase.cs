@@ -32,7 +32,9 @@ namespace Application.UseCases
                 return new LoginResponse(false, null, "Email e senha são obrigatórios");
             }
 
-            return new LoginResponse(true, request.Email.GerarTokenJWT(_config.JWT), "Login realizado com sucesso");
+            var jwt = request.Email.GerarTokenJWT(_config.JWT);
+
+            return new LoginResponse(true, jwt, "Login realizado com sucesso");
         }
 
 
