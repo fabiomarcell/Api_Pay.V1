@@ -3,8 +3,8 @@ using Domain.Responses;
 
 namespace Application.Interfaces
 {
-    public interface ILoginUseCase
+    public interface IGerarLogUseCase
     {
-        Task<LoginResponse> ExecuteAsync(LoginRequest request);
+        Task<bool> ExecuteAsync(string content);
     }
 }

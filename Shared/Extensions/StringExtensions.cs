@@ -36,8 +36,10 @@ namespace Shared.Extensions
             return tokenHandler.WriteToken(token);
         }
 
-        public static ClaimsPrincipal? ValidarJWT(this string token, string secretKey)
+        public static ClaimsPrincipal? ValidarJWT(this string token, string secretKey, out string result)
         {
+            result = "";
+
             var key = Encoding.UTF8.GetBytes(secretKey);
             var tokenHandler = new JwtSecurityTokenHandler();
 
@@ -56,8 +58,24 @@ namespace Shared.Extensions
                 var jwtConvertido = tokenHandler.ValidateToken(token, validationParameters, out _);
                 return jwtConvertido;
             }
+            catch(System.ArgumentNullException e)
+            {
+                result = "O Header Authorization deve ser informado.";
+                return null;
+            }
+            catch (Microsoft.IdentityModel.Tokens.SecurityTokenMalformedException ex)
+            {
+                result = "O Token não é um JWT Válido";
+                return null;
+            }
+            catch (Microsoft.IdentityModel.Tokens.SecurityTokenSignatureKeyNotFoundException ex)
+            {
+                result = "O Token não condiz com o sistema de origem";
+                return null;
+            }
             catch (Exception ex)
             {
+                result = "Houve um erro na validação to token";
                 return null;
             }            
         }

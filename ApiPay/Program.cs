@@ -1,3 +1,4 @@
+using ApiPay.Middleware;
 using Application.Interfaces;
 using Application.UseCases;
 using Domain.Responses;
@@ -22,6 +23,7 @@ namespace ApiPay
 
             builder.Services.Configure<Variaveis>(builder.Configuration.GetSection("Variaveis"));
             builder.Services.AddScoped<ILoginUseCase, LoginUseCase>();
+            builder.Services.AddScoped<IGerarLogUseCase, GerarLogUseCase>();
 
 
             builder.Services.AddEndpointsApiExplorer();
@@ -101,6 +103,39 @@ namespace ApiPay
                 operation.Description = "Endpoint para autenticação de usuário. Retorna token em caso de sucesso.";
                 return operation;
             });
+
+            app.MapPost("/efetuar-pagamento", async () =>
+            {
+                try
+                {
+                    //var result = await paymentUseCase.ExecuteAsync(request);
+
+                    //if (result.IsSuccess)
+                      //  return Results.Ok(result);
+
+                    return Results.BadRequest();
+                }
+                catch (Exception ex)
+                {
+                    return Results.Problem(ex.Message);
+                }
+            })
+            .AddEndpointFilter<LoginValidationMiddleware>()
+            .WithName("ProcessPayment")
+            .WithSummary("Processar pagamento")
+            .WithDescription("Processa pagamento com cartão de crédito (requer autenticação)")
+            .WithTags("Pagamento")
+            //.Produces<PaymentResponse>(200)
+            //.Produces<PaymentResponse>(400)
+            .Produces(401)
+            .Produces(500)
+            .WithOpenApi(operation =>
+            {
+                operation.Summary = "Processar pagamento";
+                operation.Description = "Endpoint para processar pagamentos com cartão de crédito. Requer token JWT válido.";
+                return operation;
+            });
+
 
             try
             {
