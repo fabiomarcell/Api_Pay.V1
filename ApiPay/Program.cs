@@ -24,6 +24,7 @@ namespace ApiPay
             builder.Services.Configure<Variaveis>(builder.Configuration.GetSection("Variaveis"));
             builder.Services.AddScoped<ILoginUseCase, LoginUseCase>();
             builder.Services.AddScoped<IGerarLogUseCase, GerarLogUseCase>();
+            builder.Services.AddScoped<IListarLogUseCase, ListarLogUseCase>();
 
 
             builder.Services.AddEndpointsApiExplorer();
@@ -104,6 +105,31 @@ namespace ApiPay
                 return operation;
             });
 
+            app.MapGet("/listar-logs", async (IListarLogUseCase listarLog) =>
+            {
+                try
+                {
+                    var result = await listarLog.ExecuteAsync();
+                        return Results.Ok(result);
+                }
+                catch (Exception ex)
+                {
+                    return Results.Problem(ex.Message);
+                }
+            })
+            .WithName("Logs")
+            .WithSummary("Logs do sistema")
+            .WithDescription("Permite visualizar os logs em memória")
+            .WithTags("Logs")
+            .Produces<LogsResponse>(200)
+            .Produces(500)
+            .WithOpenApi(operation =>
+            {
+                operation.Summary = "Logs do sistema";
+                operation.Description = "Retorna logs em caso de sucesso.";
+                return operation;
+            });
+
             app.MapPost("/efetuar-pagamento", async () =>
             {
                 try
@@ -126,7 +152,6 @@ namespace ApiPay
             .WithDescription("Processa pagamento com cartão de crédito (requer autenticação)")
             .WithTags("Pagamento")
             //.Produces<PaymentResponse>(200)
-            //.Produces<PaymentResponse>(400)
             .Produces(401)
             .Produces(500)
             .WithOpenApi(operation =>

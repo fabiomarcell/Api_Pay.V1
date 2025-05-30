@@ -5,6 +5,6 @@ namespace Application.Interfaces
 {
     public interface IGerarLogUseCase
     {
-        Task<bool> ExecuteAsync(string content);
+        Task<bool> ExecuteAsync(string origem, string content, object obj = null);
     }
 }

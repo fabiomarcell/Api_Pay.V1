@@ -37,7 +37,7 @@ namespace ApiPay.Middleware
 
             if (validationErrors.Any())
             {
-                _gerarLog.ExecuteAsync(string.Join(" | ", validationErrors));
+                _gerarLog.ExecuteAsync("Pagamento >>> ", string.Join(" | ", validationErrors));
                 return Results.BadRequest(new
                 {
                     Message = "Não foi possível seguir com o pagamento",

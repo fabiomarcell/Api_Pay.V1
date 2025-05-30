@@ -30,7 +30,7 @@ namespace ApiPay.Middleware
 
             if (!string.IsNullOrEmpty(error))
             {
-                _gerarLog.ExecuteAsync(error);
+                await _gerarLog.ExecuteAsync("Login >>> ", error, header);
                 return Results.BadRequest(new
                 {
                     Message = "Não foi possível seguir com a autenticação.",
