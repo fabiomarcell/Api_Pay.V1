@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces;
 using Application.UseCases;
 using Infrastructure.Interfaces;
+using Infrastructure.Policies;
 using Infrastructure.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,7 +20,8 @@ namespace ApiPay.Extensions
             services.AddScoped<IGerarLogUseCase, GerarLogUseCase>();
             services.AddScoped<IListarLogUseCase, ListarLogUseCase>();
             services.AddScoped<IEfetuarPagamentoUseCase, EfetuarPagamentoUseCase>();
-            services.AddHttpClient<IEfetuarPagamentoService, EfetuarPagamentoService>();
+            services.AddHttpClient<IEfetuarPagamentoService, EfetuarPagamentoService>()
+                    .AddPolicyHandler(HttpPolicies.GetRetryPolicy());
 
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(c =>
