@@ -7,6 +7,6 @@ namespace Infrastructure.Interfaces
     {
         Task<PagamentoDto> EfetuarPagamento(PagamentoRequest request, HttpClient httpClient);
         void EfetuarCancelamento();
-        void ConsultarPedido();
+        Task<PagamentoDto> ConsultarPedido(string id, HttpClient httpClient);
     }
 }

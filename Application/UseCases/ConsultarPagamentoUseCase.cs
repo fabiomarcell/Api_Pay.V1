@@ -6,39 +6,40 @@ using Shared.DTO;
 
 namespace Application.UseCases
 {
-    public class EfetuarPagamentoUseCase : IEfetuarPagamentoUseCase
+    public class ConsultarPagamentoUseCase : IConsultarPagamentoUseCase
     {
-        private IEfetuarPagamentoService _efetuarPagamentoService;
+        private IConsultarPagamentoService _consultarPagamentoService;
         private IGerarLogUseCase _gerarLogUseCase;
         private readonly DadosProvedoresDTO[] PROVEDORES = new DadosProvedoresDTO[] {
             new DadosProvedoresDTO(){ Nome = "provedor 1" },
             new DadosProvedoresDTO(){ Nome = "provedor 2" }
         };
-        public EfetuarPagamentoUseCase(IEfetuarPagamentoService efetuarPagamentoService, IGerarLogUseCase gerarLogUseCase)
+        public ConsultarPagamentoUseCase(IConsultarPagamentoService consultarPagamentoService, IGerarLogUseCase gerarLogUseCase)
         {
-            _efetuarPagamentoService = efetuarPagamentoService;
+            _consultarPagamentoService = consultarPagamentoService;
             _gerarLogUseCase = gerarLogUseCase;
         }
 
-        public async Task<EfetuarPagamentoResponse> ExecuteAsync(PagamentoRequest request)
+        public async Task<EfetuarPagamentoResponse> ExecuteAsync(string id)
         {
             var response = new PagamentoDto();
             foreach (var item in PROVEDORES)
             {
-                response = null; 
+                response = null;
+
                 try
                 {
-                    response = await _efetuarPagamentoService.ExecuteAsync(request, item.Nome);
+                    response = await _consultarPagamentoService.ExecuteAsync(id, item.Nome);
                 }
                 catch(Exception ex)
                 {
-                    _gerarLogUseCase.ExecuteAsync("EfetuarPagamento >>>", $"Erro inesperado ao efetuar o pagamento pelo '{item.Nome}' : '{ex.Message}'", request);
+                    _gerarLogUseCase.ExecuteAsync("ConsultarPagamento >>>", $"Erro inesperado ao efetuar a consulta do pagamento pelo '{item.Nome}' : '{ex.Message}'", id);
                     continue;
                 }
 
                 if (response == null)
                 {
-                    _gerarLogUseCase.ExecuteAsync("EfetuarPagamento >>>", $"Não foi possível efetuar o pagamento pelo '{item.Nome}'", request);
+                    _gerarLogUseCase.ExecuteAsync("ConsultarPagamento >>>", $"Não foi possível efetuar a consulta do pagamento pelo '{item.Nome}'", id);
                 }
                 else
                 {

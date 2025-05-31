@@ -18,8 +18,9 @@ namespace Infrastructure.Services.Provedores
             Console.WriteLine("Cancelamento efetuado via Provedor2.");
         }
 
-        public void ConsultarPedido()
+        public async Task<PagamentoDto> ConsultarPedido(string id, HttpClient httpClient)
         {
+            return null;
             Console.WriteLine("Consulta de pedido via Provedor2.");
         }
 

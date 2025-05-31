@@ -30,9 +30,10 @@ namespace Infrastructure.Services.Provedores
             _strategy.EfetuarCancelamento();
         }
 
-        public void ExecutarConsulta()
+        public async Task<PagamentoDto> ExecutarConsulta(string id, HttpClient httpClient)
         {
-            _strategy.ConsultarPedido();
+            await _strategy.ConsultarPedido(id, httpClient);
+            return null;
         }
     }
 }

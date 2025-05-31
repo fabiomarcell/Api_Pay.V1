@@ -25,7 +25,7 @@ namespace ApiPay.Routes
                     return Results.Problem(ex.Message);
                 } 
             })
-            //.AddEndpointFilter<LoginValidationMiddleware>()
+            .AddEndpointFilter<LoginValidationMiddleware>()
             .WithName("EfetuaPagamento")
             .WithSummary("Processar pagamento")
             .WithDescription("Processa pagamento com cartão de crédito (requer autenticação)")
@@ -41,23 +41,20 @@ namespace ApiPay.Routes
             });
 
 
-            app.MapGet("/payments/{id}", async () =>
+            app.MapGet("/payments/{id}", async (string id, IConsultarPagamentoUseCase consultarPagamentoUseCase) =>
             {
                 try
                 {
-                    //var result = await paymentUseCase.ExecuteAsync(request);
+                    var result = await consultarPagamentoUseCase.ExecuteAsync(id);
 
-                    //if (result.IsSuccess)
-                    //  return Results.Ok(result);
-
-                    return Results.BadRequest();
+                    return Results.Ok();
                 }
                 catch (Exception ex)
                 {
                     return Results.Problem(ex.Message);
                 }
             })
-            .AddEndpointFilter<LoginValidationMiddleware>()
+            //.AddEndpointFilter<LoginValidationMiddleware>()
             .WithName("Lista Pagamento")
             .WithSummary("Detalhar Pagamento")
             .WithDescription("Exibe pagamento (requer autenticação)")
@@ -72,7 +69,7 @@ namespace ApiPay.Routes
                 return operation;
             });
 
-            app.MapPut("/refund", async (Domain.Requests.PagamentoRequest request) =>
+            app.MapPut("/refund/{id}", async (Domain.Requests.PagamentoRequest request) =>
             {
                 try
                 {

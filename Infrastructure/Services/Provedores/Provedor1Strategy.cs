@@ -55,9 +55,20 @@ namespace Infrastructure.Services.Provedores
             Console.WriteLine("Cancelamento efetuado via Provedor1.");
         }
 
-        public void ConsultarPedido()
+        public async Task<PagamentoDto> ConsultarPedido(string id, HttpClient httpClient)
         {
-            Console.WriteLine("Consulta de pedido via Provedor1.");
+            var response = await httpClient.GetAsync($"https://683a335543bb370a867218c6.mockapi.io/charges/{id}");
+
+            var responseContent = await response.Content.ReadAsStringAsync();
+
+            if (responseContent == "Invalid request" || responseContent == "Not Found")
+            {
+                return null;
+            }
+
+            var retorno = JsonSerializer.Deserialize<PagamentoDto>(responseContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+            return retorno;
         }
     }
 }
