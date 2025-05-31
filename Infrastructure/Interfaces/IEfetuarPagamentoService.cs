@@ -9,6 +9,6 @@ namespace Infrastructure.Interfaces
 {
     public interface IEfetuarPagamentoService
     {
-        Task ExecuteAsync(PagamentoRequest request);
+        Task<object> ExecuteAsync(PagamentoRequest request);
     }
 }

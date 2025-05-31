@@ -20,7 +20,7 @@ namespace Infrastructure.Services
             _httpClient = httpClient;
         }
 
-        public async Task ExecuteAsync(PagamentoRequest request)
+        public async Task<object> ExecuteAsync(PagamentoRequest request)
         {
             var json = JsonSerializer.Serialize(new
             {
@@ -46,9 +46,10 @@ namespace Infrastructure.Services
             var response = await _httpClient.PostAsync("https://683a335543bb370a867218c6.mockapi.io/charges", content);
 
             var responseContent = await response.Content.ReadAsStringAsync();
+            
             var retorno = JsonSerializer.Deserialize<PagamentoDto>(responseContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-
+            return retorno;
         }
 
     }

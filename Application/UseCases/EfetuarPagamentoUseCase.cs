@@ -16,7 +16,7 @@ namespace Application.UseCases
 
         public async Task<EfetuarPagamentoResponse> ExecuteAsync(PagamentoRequest request)
         {
-            _efetuarPagamentoService.ExecuteAsync(request);
+            var response = _efetuarPagamentoService.ExecuteAsync(request);
             return new EfetuarPagamentoResponse(Guid.NewGuid(), "APROVED", 100.23, "BRL", Guid.NewGuid());
         }
     }
