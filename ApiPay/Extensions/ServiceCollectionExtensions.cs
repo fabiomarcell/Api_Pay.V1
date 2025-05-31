@@ -22,6 +22,7 @@ namespace ApiPay.Extensions
             services.AddScoped<IEfetuarPagamentoUseCase, EfetuarPagamentoUseCase>();
             services.AddHttpClient<IEfetuarPagamentoService, EfetuarPagamentoService>()
                     .AddPolicyHandler(HttpPolicies.GetRetryPolicy());
+            
 
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(c =>

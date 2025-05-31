@@ -1,11 +1,11 @@
 ﻿namespace Domain.Responses
 {
     public record EfetuarPagamentoResponse(
-        Guid Id,
+        string Id,
         string Status,
-        double OriginalAmount,
+        string OriginalAmount,
         string Currency, //BRL
-        Guid CardId
+        string CardId
     );
 
 }
