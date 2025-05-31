@@ -1,18 +1,6 @@
 using ApiPay.Extensions;
-using ApiPay.Middleware;
 using ApiPay.Routes;
-using Application.Interfaces;
-using Application.UseCases;
-using Domain.Responses;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity.Data;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Shared.Configuration;
-using Shared.Extensions;
 using System;
 
 namespace ApiPay
@@ -37,7 +25,7 @@ namespace ApiPay
 
             app.LoginEndpoints();
             app.PagamentosEndpoints();
-            app.LogsEndpoints(); 
+            app.LogsEndpoints();
 
             try
             {

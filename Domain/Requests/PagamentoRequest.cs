@@ -13,6 +13,13 @@ namespace Domain.Requests
     /// <param name="Currency">Moeda em formato ISO 4217</param>
     /// <param name="Description">Descrição da transação</param>
     /// <param name="PaymentMethod">Informações do método de pagamento</param>
+    /// <param name="Type">Tipo de pagamento</param>
+    /// <param name="Card">Dados do cartão</param>
+    /// <param name="Number">Número do cartão</param>
+    /// <param name="HolderName">Nome do titular</param>
+    /// <param name="Cvv">Código de segurança</param>
+    /// <param name="ExpirationDate">Data de validade (MM/YYYY)</param>
+    /// <param name="Installments">Número de parcelas</param>
     public record PagamentoRequest(
         /// <example>100.50</example>
         decimal Amount,
@@ -23,30 +30,9 @@ namespace Domain.Requests
         /// <example>Compra de produtos promocionais</example>
         string Description,
 
-        PaymentMethodRequest PaymentMethod
-    );
-
-    /// <summary>
-    /// Método de pagamento 
-    /// </summary>
-    /// <param name="Type">Tipo de pagamento</param>
-    /// <param name="Card">Dados do cartão</param>
-    public record PaymentMethodRequest(
         /// <example>cartão de crédito</example>
         string Type,
 
-        CardRequest Card
-    );
-
-    /// <summary>
-    /// Dados do cartão de crédito
-    /// </summary>
-    /// <param name="Number">Número do cartão</param>
-    /// <param name="HolderName">Nome do titular</param>
-    /// <param name="Cvv">Código de segurança</param>
-    /// <param name="ExpirationDate">Data de validade (MM/YYYY)</param>
-    /// <param name="Installments">Número de parcelas</param>
-    public record CardRequest(
         /// <example>4111111111111111</example>
         string Number,
 
@@ -62,5 +48,4 @@ namespace Domain.Requests
         /// <example>3</example>
         int Installments
     );
-
 }
