@@ -90,7 +90,7 @@ namespace ApiPay.Routes
                     return Results.Problem(ex.Message);
                 }
             })
-            //.AddEndpointFilter<LoginValidationMiddleware>()
+            .AddEndpointFilter<LoginValidationMiddleware>()
             .WithName("ExtornaPagamento")
             .WithSummary("Extorna pagamento")
             .WithDescription("Extorna pagamento (requer autenticação)")
