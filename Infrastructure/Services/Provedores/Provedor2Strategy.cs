@@ -23,7 +23,7 @@ namespace Infrastructure.Services.Provedores
 
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var response = await httpClient.PutAsync("https://683a335543bb370a867218c6.mockapi.io/transactions/{id}", content);
+            var response = await httpClient.PutAsync($"https://683a335543bb370a867218c6.mockapi.io/transactions/{id}", content);
 
             var responseContent = await response.Content.ReadAsStringAsync();
 
@@ -32,9 +32,21 @@ namespace Infrastructure.Services.Provedores
                 return null;
             }
 
-            var retorno = JsonSerializer.Deserialize<PagamentoDto>(responseContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            var retorno = JsonSerializer.Deserialize<PagamentoProvedor2DTO>(responseContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-            return retorno;
+            return new PagamentoDto()
+            {
+                amount = retorno.amount,
+                cardId = retorno.cardId,
+                createdAt = retorno.date,
+                currency = retorno.currency,
+                currentAmount = retorno.originalAmount,
+                description = retorno.statementDescriptor,
+                id = retorno.id,
+                originalAmount = retorno.originalAmount,
+                paymentMethod = new PaymentMethod() { type = retorno.paymentType },
+                status = retorno.status
+            };
         }
 
         public async Task<PagamentoDto> ConsultarPedido(string id, HttpClient httpClient)

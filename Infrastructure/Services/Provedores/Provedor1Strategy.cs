@@ -61,11 +61,11 @@ namespace Infrastructure.Services.Provedores
 
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var response = await httpClient.PutAsync("https://683a335543bb370a867218c6.mockapi.io/charges/{id}", content);
+            var response = await httpClient.PutAsync($"https://683a335543bb370a867218c6.mockapi.io/charges/{id}", content);
 
             var responseContent = await response.Content.ReadAsStringAsync();
 
-            if (responseContent == "Invalid request")
+            if (responseContent == "Invalid request" || responseContent.Trim('"') == "Not found")
             {
                 return null;
             }

@@ -54,6 +54,10 @@ namespace Application.UseCases
             if (response != null)
             {
                 var responseEstorno = await _efetuarEstornoService.ExecuteAsync(id, request, provedor);
+                if (response == null)
+                {
+                    _gerarLogUseCase.ExecuteAsync("EfetuarEstorno >>>", $"Não foi possível localizar o pagamento para estino pelo '{provedor}'", id);
+                }
             }
 
             //com o provedor certo, faço o estorno
