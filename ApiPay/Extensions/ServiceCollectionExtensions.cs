@@ -19,14 +19,20 @@ namespace ApiPay.Extensions
             services.AddScoped<ILoginUseCase, LoginUseCase>();
             services.AddScoped<IGerarLogUseCase, GerarLogUseCase>();
             services.AddScoped<IListarLogUseCase, ListarLogUseCase>();
+
             services.AddScoped<IEfetuarPagamentoUseCase, EfetuarPagamentoUseCase>();
             services.AddHttpClient<IEfetuarPagamentoService, EfetuarPagamentoService>()
                     .AddPolicyHandler(HttpPolicies.GetRetryPolicy());
+
             services.AddScoped<IConsultarPagamentoUseCase, ConsultarPagamentoUseCase>();
-            services.AddScoped<IConsultarPagamentoService, ConsultarPagamentoService>();
             services.AddHttpClient<IConsultarPagamentoService, ConsultarPagamentoService>()
                     .AddPolicyHandler(HttpPolicies.GetRetryPolicy());
-            
+
+            services.AddScoped<IEfetuarEstornoUseCase, EfetuarEstornoUseCase>();
+            services.AddHttpClient<IEfetuarEstornoService, EfetuarEstornoService>()
+                    .AddPolicyHandler(HttpPolicies.GetRetryPolicy());
+
+
 
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(c =>

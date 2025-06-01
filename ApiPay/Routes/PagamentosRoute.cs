@@ -1,10 +1,12 @@
 ﻿using ApiPay.Middleware;
 using Application.Interfaces;
+using Application.UseCases;
 using Domain.Responses;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using System;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ApiPay.Routes
 {
@@ -47,19 +49,22 @@ namespace ApiPay.Routes
                 {
                     var result = await consultarPagamentoUseCase.ExecuteAsync(id);
 
-                    return Results.Ok();
+                    return Results.Ok(result != null ? result : (new
+                    {
+                        Message = $"Não foi possível localizar o pagamento {id}.",
+                    }));
                 }
                 catch (Exception ex)
                 {
                     return Results.Problem(ex.Message);
                 }
             })
-            //.AddEndpointFilter<LoginValidationMiddleware>()
+            .AddEndpointFilter<LoginValidationMiddleware>()
             .WithName("Lista Pagamento")
             .WithSummary("Detalhar Pagamento")
             .WithDescription("Exibe pagamento (requer autenticação)")
             .WithTags("Pagamento")
-            //.Produces<PaymentResponse>(200)
+            .Produces<EfetuarPagamentoResponse>(200)
             .Produces(401)
             .Produces(500)
             .WithOpenApi(operation =>
@@ -69,28 +74,28 @@ namespace ApiPay.Routes
                 return operation;
             });
 
-            app.MapPut("/refund/{id}", async (Domain.Requests.PagamentoRequest request) =>
+            app.MapPut("/payments/{id}", async (string id, Domain.Requests.EstornoRequest request, IEfetuarEstornoUseCase estornoPagamentoUseCase) =>
             {
                 try
                 {
-                    //var result = await paymentUseCase.ExecuteAsync(request);
+                    var result = await estornoPagamentoUseCase.ExecuteAsync(id, request);
 
-                    //if (result.IsSuccess)
-                    //  return Results.Ok(result);
-
-                    return Results.BadRequest();
+                    return Results.Ok(result != null ? result : (new
+                    {
+                        Message = $"Não foi possível efetuar o estorno do pagamento {id}.",
+                    }));
                 }
                 catch (Exception ex)
                 {
                     return Results.Problem(ex.Message);
                 }
             })
-            .AddEndpointFilter<LoginValidationMiddleware>()
+            //.AddEndpointFilter<LoginValidationMiddleware>()
             .WithName("ExtornaPagamento")
             .WithSummary("Extorna pagamento")
             .WithDescription("Extorna pagamento (requer autenticação)")
             .WithTags("Pagamento")
-            //.Produces<PaymentResponse>(200)
+            .Produces<EfetuarPagamentoResponse>(200)
             .Produces(401)
             .Produces(500)
             .WithOpenApi(operation =>

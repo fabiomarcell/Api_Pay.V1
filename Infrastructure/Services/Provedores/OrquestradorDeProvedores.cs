@@ -25,15 +25,14 @@ namespace Infrastructure.Services.Provedores
             return result;
         }
 
-        public void ExecutarCancelamento()
+        public async Task<PagamentoDto> ExecutarCancelamento(string id, EstornoRequest request, HttpClient httpClient)
         {
-            _strategy.EfetuarCancelamento();
+            return await _strategy.EfetuarCancelamento(id, request, httpClient);
         }
 
         public async Task<PagamentoDto> ExecutarConsulta(string id, HttpClient httpClient)
         {
-            await _strategy.ConsultarPedido(id, httpClient);
-            return null;
+            return await _strategy.ConsultarPedido(id, httpClient);
         }
     }
 }
