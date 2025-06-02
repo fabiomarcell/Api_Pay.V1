@@ -39,7 +39,8 @@ namespace Application.UseCases
 
                 return new LoginResponse(true, jwt, "Login realizado com sucesso");
             }
-        
+
+            return null;
         }
 
         private bool ValidPassword(string password, string hashedPassword)
