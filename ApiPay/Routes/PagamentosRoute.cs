@@ -27,7 +27,7 @@ namespace ApiPay.Routes
                     return Results.Problem(ex.Message);
                 } 
             })
-            .AddEndpointFilter<LoginValidationMiddleware>()
+            //.AddEndpointFilter<LoginValidationMiddleware>()
             .WithName("EfetuaPagamento")
             .WithSummary("Processar pagamento")
             .WithDescription("Processa pagamento com cartão de crédito (requer autenticação)")

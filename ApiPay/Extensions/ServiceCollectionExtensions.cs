@@ -2,9 +2,12 @@
 using Application.UseCases;
 using Infrastructure.Interfaces;
 using Infrastructure.Policies;
+using Infrastructure.Repository.DBContext;
+using Infrastructure.Repository.Entities;
 using Infrastructure.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Shared.Configuration;
 
 namespace ApiPay.Extensions
@@ -14,7 +17,12 @@ namespace ApiPay.Extensions
         public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<Variaveis>(configuration.GetSection("Variaveis"));
+            services.Configure<MongoDbSettings>(configuration.GetSection("MongoDbSettings"));
+            services.AddSingleton<IMongoDbSettings>(serviceProvider =>
+                serviceProvider.GetRequiredService<IOptions<MongoDbSettings>>().Value);
 
+            services.AddSingleton<IDbContext, MongoDbContext>();
+            services.AddScoped<IPagamentoRepository, PagamentoRepository>();
 
             services.AddScoped<ILoginUseCase, LoginUseCase>();
             services.AddScoped<IGerarLogUseCase, GerarLogUseCase>();
