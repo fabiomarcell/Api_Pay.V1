@@ -5,6 +5,7 @@ using Infrastructure.Policies;
 using Infrastructure.Repository.DBContext;
 using Infrastructure.Repository.Entities.Login;
 using Infrastructure.Repository.Entities.Pagamento;
+using Infrastructure.Repository.Entities.Provedores;
 using Infrastructure.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,6 +26,7 @@ namespace ApiPay.Extensions
             services.AddSingleton<IDbContext, MongoDbContext>();
             services.AddScoped<IPagamentoRepository, PagamentoRepository>();
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+            services.AddScoped<IProvedorRepository, ProvedorRepository>();
             
             services.AddScoped<ILoginUseCase, LoginUseCase>();
             services.AddScoped<IGerarLogUseCase, GerarLogUseCase>();

@@ -3,6 +3,7 @@ using Domain.Requests;
 using Domain.Responses;
 using Infrastructure.Interfaces;
 using Infrastructure.Repository.Entities.Pagamento;
+using Infrastructure.Repository.Entities.Provedores;
 using Shared.DTO;
 using System.Text.Json;
 
@@ -26,9 +27,10 @@ namespace Application.UseCases
         public async Task<EfetuarPagamentoResponse> ExecuteAsync(string id, EstornoRequest request)
         {
             var response = new PagamentoDto();
-            var provedor = "";
-            
+            var provedor = new ProvedorModel();
+
             response = null;
+            provedor = null;
             var pagamento = _pagamentoRepository.LocalizarPagamento(new PagamentoModel() { Id = id });
 
             if (!pagamento.Any())

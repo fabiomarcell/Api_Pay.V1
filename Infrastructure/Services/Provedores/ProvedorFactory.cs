@@ -8,8 +8,8 @@ namespace Infrastructure.Services.Provedores
         {
             return nomeProvedor.ToLower() switch
             {
-                "provedor 1" => new Provedor1Strategy(),
-                "provedor 2" => new Provedor2Strategy(),
+                "683df3d10a1c6bbfca2cd5d1" => new Provedor1Strategy(),
+                "683df3d10a1c6bbfca2cd5d2" => new Provedor2Strategy(),
                 _ => throw new ArgumentException("Provedor inválido."),
             };
         }

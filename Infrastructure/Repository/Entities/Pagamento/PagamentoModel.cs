@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson;
+﻿using Infrastructure.Repository.Entities.Provedores;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,7 @@ namespace Infrastructure.Repository.Entities.Pagamento
         public string Id { get; set; }
         public string Status { get; set; }
         public double Amount { get; set; }
-        public string Provedor { get; set; }
+        public ProvedorModel Provedor { get; set; }
         public string RequestBody { get; set; }
     }
 }

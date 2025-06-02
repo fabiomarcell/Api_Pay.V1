@@ -1,5 +1,6 @@
 ﻿using Domain.Requests;
 using Infrastructure.Interfaces;
+using Infrastructure.Repository.Entities.Provedores;
 using Infrastructure.Services.Provedores;
 using Shared.DTO;
 
@@ -15,9 +16,9 @@ namespace Infrastructure.Services
             _httpClient = httpClient;
         }
 
-        public async Task<PagamentoDto> ExecuteAsync(PagamentoRequest request, string nomeProvedor)
+        public async Task<PagamentoDto> ExecuteAsync(PagamentoRequest request, ProvedorModel nomeProvedor)
         {
-            var strategy = PagamentoFactory.Criar(nomeProvedor);
+            var strategy = PagamentoFactory.Criar(nomeProvedor._id.ToString());
             var provedor = new OrquestradorDeProvedores(strategy);
             return await provedor.ExecutarPagamento(request, _httpClient);
         }
