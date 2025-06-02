@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Repository.Entities
+namespace Infrastructure.Repository.Entities.Pagamento
 {
     public class PagamentoRepository : IPagamentoRepository
     {
@@ -24,7 +24,7 @@ namespace Infrastructure.Repository.Entities
 
         public void Inserir(PagamentoModel item)
         {
-            _db.Inserir<PagamentoModel>(item);
+            _db.Inserir(item);
         }
 
         public IEnumerable<PagamentoModel> LocalizarPagamento(PagamentoModel item)

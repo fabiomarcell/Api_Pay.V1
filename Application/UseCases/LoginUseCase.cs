@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces;
 using Domain.Requests;
 using Domain.Responses;
+using Infrastructure.Repository.Entities.Login;
 using Microsoft.Extensions.Options;
 using Shared.Configuration;
 using Shared.Extensions;
@@ -10,10 +11,12 @@ namespace Application.UseCases
     public class LoginUseCase : ILoginUseCase
     {
         private Variaveis _config;
+        private IUsuarioRepository _usuarioRepository;
 
-        public LoginUseCase(IOptions<Variaveis> config)
+        public LoginUseCase(IOptions<Variaveis> config, IUsuarioRepository usuarioRepository)
         {
             _config = config.Value;
+            _usuarioRepository = usuarioRepository;
         }
 
         public async Task<LoginResponse> ExecuteAsync(LoginRequest request)
@@ -24,11 +27,30 @@ namespace Application.UseCases
                 return new LoginResponse(false, null, "Email e senha são obrigatórios");
             }
 
-            var jwt = request.Email.GerarTokenJWT(_config.JWT);
+            var potentialUsers = _usuarioRepository.Login(new UsuarioModel() { Usuario = request.Email});
+            if (potentialUsers.Count() != 1)
+            {
+                return null;
+            }
 
-            return new LoginResponse(true, jwt, "Login realizado com sucesso");
+            if (ValidPassword(request.Password, potentialUsers.ElementAt(0).Senha))
+            {
+                var jwt = request.Email.GerarTokenJWT(_config.JWT);
+
+                return new LoginResponse(true, jwt, "Login realizado com sucesso");
+            }
+        
         }
 
+        private bool ValidPassword(string password, string hashedPassword)
+        {
+            return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
+        }
+
+        private string HashPassword(string password)
+        {
+            return BCrypt.Net.BCrypt.HashPassword(password);
+        }
 
     }
 }

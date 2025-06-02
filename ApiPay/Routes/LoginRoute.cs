@@ -18,10 +18,10 @@ namespace ApiPay.Routes
                 {
                     var result = await loginUseCase.ExecuteAsync(request);
 
-                    if (result.IsSuccess)
+                    if (result != null && result.IsSuccess)
                         return Results.Ok(result);
 
-                    return Results.BadRequest(result);
+                    return Results.Unauthorized();
                 }
                 catch (Exception ex)
                 {

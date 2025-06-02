@@ -3,6 +3,7 @@ using Domain.Requests;
 using Domain.Responses;
 using Infrastructure.Interfaces;
 using Infrastructure.Repository.Entities;
+using Infrastructure.Repository.Entities.Pagamento;
 using Shared.DTO;
 using System.Text.Json;
 
