@@ -13,6 +13,8 @@ namespace Infrastructure.Repository.Entities.Pagamento
         [BsonId]
         public ObjectId _id { get; set; }
         public string Id { get; set; }
+        public string Status { get; set; }
+        public double Amount { get; set; }
         public string Provedor { get; set; }
         public string RequestBody { get; set; }
     }

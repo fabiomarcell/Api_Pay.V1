@@ -59,7 +59,10 @@ namespace Application.UseCases
             {
                 Provedor = response == null ? null : provedor,
                 RequestBody = JsonSerializer.Serialize(request),
-                Id = response.id
+                Id = response.id,
+                Amount = Convert.ToDouble(response.amount),
+                Status = response.status
+
             });
 
             return response == null ? null : new EfetuarPagamentoResponse(response.id, response.status, response.originalAmount.ToString(), response.currency, response.cardId);

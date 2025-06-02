@@ -17,6 +17,20 @@ namespace Infrastructure.Repository.Entities.Pagamento
             _db = context;
         }
 
+        public void AtualizarPagamentoEstornado(PagamentoModel item)
+        {
+            var filtro = Builders<PagamentoModel>.Filter.Eq(p => p.Id, item.Id);
+
+            var camposParaAtualizar = new Dictionary<string, object>
+            {
+                { "Amount", item.Amount },
+                { "Status", item.Status },
+                { "RequestBody", item.RequestBody }
+            };
+
+            _db.Atualizar(filtro, camposParaAtualizar);
+        }
+
         public List<PagamentoModel> GetAll()
         {
             return _db.ListarTodos<PagamentoModel>();
@@ -29,10 +43,8 @@ namespace Infrastructure.Repository.Entities.Pagamento
 
         public IEnumerable<PagamentoModel> LocalizarPagamento(PagamentoModel item)
         {
-            /*var filtro = Builders<PagamentoModel>.Filter.Eq(u => u.Provedor, item.Usuario) /*& 
-                            Builders<UsuarioModel>.Filter.Eq(u => u.Senha, item.Senha)*/;
-            //return _db.ListarComQuery<PagamentoModel>(filtro);
-            return null;
+            var filtro = Builders<PagamentoModel>.Filter.Eq(u => u.Id, item.Id);
+            return _db.ListarComQuery<PagamentoModel>(filtro);
         }
     }
 }

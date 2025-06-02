@@ -56,7 +56,8 @@ namespace Infrastructure.Services.Provedores
             var json = JsonSerializer.Serialize(new
             {
                 id = Guid.NewGuid(),
-                amount = request.Amount
+                amount = request.Amount,
+                status = "Refund"
             });
 
             var content = new StringContent(json, Encoding.UTF8, "application/json");

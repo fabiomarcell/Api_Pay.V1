@@ -11,5 +11,7 @@ namespace Infrastructure.Repository.Entities.Pagamento
         List<PagamentoModel> GetAll();
         void Inserir(PagamentoModel item);
         IEnumerable<PagamentoModel> LocalizarPagamento(PagamentoModel item);
+
+        void AtualizarPagamentoEstornado(PagamentoModel item);
     }
 }

@@ -2,7 +2,9 @@
 using Domain.Requests;
 using Domain.Responses;
 using Infrastructure.Interfaces;
+using Infrastructure.Repository.Entities.Pagamento;
 using Shared.DTO;
+using System.Text.Json;
 
 namespace Application.UseCases
 {
@@ -10,45 +12,45 @@ namespace Application.UseCases
     {
         private IEfetuarEstornoService _efetuarEstornoService;
         private IConsultarPagamentoService _consultarPagamentoService;
+        private IPagamentoRepository _pagamentoRepository;
         private IGerarLogUseCase _gerarLogUseCase;
-        private readonly DadosProvedoresDTO[] PROVEDORES = new DadosProvedoresDTO[] {
-            new DadosProvedoresDTO(){ Nome = "provedor 1" },
-            new DadosProvedoresDTO(){ Nome = "provedor 2" }
-        };
-        public EfetuarEstornoUseCase(IConsultarPagamentoService consultarPagamentoService, IEfetuarEstornoService efetuarEstornoService, IGerarLogUseCase gerarLogUseCase)
+        
+        public EfetuarEstornoUseCase(IConsultarPagamentoService consultarPagamentoService, IEfetuarEstornoService efetuarEstornoService, IGerarLogUseCase gerarLogUseCase, IPagamentoRepository pagamentoRepository)
         {
             _efetuarEstornoService = efetuarEstornoService;
             _gerarLogUseCase = gerarLogUseCase;
             _consultarPagamentoService = consultarPagamentoService;
+            _pagamentoRepository = pagamentoRepository;
         }
 
         public async Task<EfetuarPagamentoResponse> ExecuteAsync(string id, EstornoRequest request)
         {
             var response = new PagamentoDto();
             var provedor = "";
-            foreach (var item in PROVEDORES)
+            
+            response = null;
+            var pagamento = _pagamentoRepository.LocalizarPagamento(new PagamentoModel() { Id = id });
+
+            if (!pagamento.Any())
             {
-                response = null;
+                _gerarLogUseCase.ExecuteAsync("EfetuarEstorno >>>", $"Pagamento não localizado no banco de dados", id);
+                return null;
+            }
 
-                try
-                {
-                    response = await _consultarPagamentoService.ExecuteAsync(id, item.Nome);
-                }
-                catch(Exception ex)
-                {
-                    _gerarLogUseCase.ExecuteAsync("EfetuarEstorno >>>", $"Erro inesperado ao efetuar o estorno do pagamento pelo '{item.Nome}' : '{ex.Message}'", id);
-                    continue;
-                }
+            provedor = pagamento.ElementAt(0).Provedor;
+            try
+            {
+                response = await _consultarPagamentoService.ExecuteAsync(id, provedor);
+            }
+            catch(Exception ex)
+            {
+                _gerarLogUseCase.ExecuteAsync("EfetuarEstorno >>>", $"Erro inesperado ao efetuar o estorno do pagamento pelo '{provedor}' : '{ex.Message}'", id);
+                return null;
+            }
 
-                if (response == null)
-                {
-                    _gerarLogUseCase.ExecuteAsync("EfetuarEstorno >>>", $"Não foi possível efetuar o estorno do pagamento pelo '{item.Nome}'", id);
-                }
-                else
-                {
-                    provedor = item.Nome;
-                    break;
-                }
+            if (response == null)
+            {
+                _gerarLogUseCase.ExecuteAsync("EfetuarEstorno >>>", $"Não foi possível efetuar o estorno do pagamento pelo '{provedor}'", id);
             }
 
             if (response != null)
@@ -58,9 +60,10 @@ namespace Application.UseCases
                 {
                     _gerarLogUseCase.ExecuteAsync("EfetuarEstorno >>>", $"Não foi possível localizar o pagamento para estino pelo '{provedor}'", id);
                 }
-            }
 
-            //com o provedor certo, faço o estorno
+                _pagamentoRepository.AtualizarPagamentoEstornado(new PagamentoModel() { Id = id, Amount = Convert.ToDouble(responseEstorno.amount), Status = responseEstorno.status, RequestBody = JsonSerializer.Serialize(responseEstorno) });
+
+            }
 
             return response == null ? null : new EfetuarPagamentoResponse(response.id, response.status, response.originalAmount.ToString(), response.currency, response.cardId);
         }

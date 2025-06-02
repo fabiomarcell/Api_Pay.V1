@@ -11,7 +11,7 @@ namespace ApiPay.Routes
     {
         public static void LogsEndpoints(this IEndpointRouteBuilder app)
         {
-            app.MapGet("/listar-logs", async (IListarLogUseCase listarLog) =>
+            app.MapGet("/logs", async (IListarLogUseCase listarLog) =>
             {
                 try
                 {
