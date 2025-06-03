@@ -71,6 +71,26 @@ docker run -d -p 7001:7001 --name apipay apipay
 docker-compose up --build
 ```
 
+Efetuar as operações em banco de dados para realizar as simulações:
+
+```
+db.UsuarioModel.insert({
+	"_id" : ObjectId("683de4167574ea250ae77ae0"),
+	"Usuario" : "fabio",
+	"Senha" : "$2a$11$Q6vsPpjryc9X0BIMVHZ5l.q5Mk1O5rArsm/VNEm.wC/RJMc1znEku" //senha teste
+})
+
+db.ProvedorModel.insert({
+	"_id" : ObjectId("683df3d10a1c6bbfca2cd5d2"),
+	"Nome" : "provedor 2"
+})
+
+db.ProvedorModel.insert({
+	"_id" : ObjectId("683df3d10a1c6bbfca2cd5d1"),
+	"Nome" : "provedor 1"
+})
+```
+
 # Uso da API
 
 ## Autenticação
@@ -209,3 +229,5 @@ curl -X 'PUT' \
 "cardId": "cardId 98"
 }
 ```
+
+
