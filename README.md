@@ -3,6 +3,7 @@
 Uma API desenvolvida em .NET que utiliza MongoDB como banco de dados. A aplicação é configurada para autenticação via JWT e também pode ser executada em containers Docker.
 A Api tem finalidade de simular integração com meios de pagamentos de forma resiliente, onde caso uma delas caia, outra possa assumir a responsabilidade.
 A solução aplica padrões de clean code, e padrões de projeto(como strategy, factory, e repository).
+A Aplicação escreve logs estruturados, usando NLog, em arquivos de texto. Também é possível listar esses logs em um endpoint da api.
 Existem espaços para melhorias, como migrar o trecho responsável por efetuar requests em filas, evitando uso do webserver, mas não se adequaria ao desafio proposto.
 
 ## Tecnologias Utilizadas
@@ -14,6 +15,7 @@ Existem espaços para melhorias, como migrar o trecho responsável por efetuar r
 
 ## Estrutura do Projeto
 
+```plaintext
 /Api_Pay.V1
 ├── /ApiPay
 ├── /Application
@@ -24,6 +26,7 @@ Existem espaços para melhorias, como migrar o trecho responsável por efetuar r
 ├── .gitignore
 ├── Dockerfile
 └── docker-compose.yml
+```
 
 - **ApiPay:** Contém a configuração da API e inicialização do servidor.
 - **Application:** Lógica de negócios e serviços da aplicação.
