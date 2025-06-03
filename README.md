@@ -70,3 +70,142 @@ docker run -d -p 7001:7001 --name apipay apipay
 ```bash
 docker-compose up --build
 ```
+
+# Uso da API
+
+## Autenticação
+
+### Login
+
+Realiza a autenticação do usuário e retorna um token JWT.
+
+**Requisição:**
+```bash
+curl -X 'POST' \
+  'https://localhost:7001/login' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "email": "fabio",
+    "password": "teste"
+}'
+```
+**Resposta:**
+```json
+{
+  "isSuccess": true,
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "message": "Login realizado com sucesso"
+}
+```
+
+## Logs
+
+### Consultar Logs
+
+Retorna os registros de eventos da aplicação.
+
+**Requisição:**
+```bash
+curl -X 'GET'
+'https://localhost:7001/logs'
+-H 'accept: application/json'
+```
+**Resposta:**
+```json
+{
+"logs": [
+"2025-05-31 01:33:30.4347|INFO|PID=27072|Login >>> Houve um erro na validação do token...",
+"2025-06-02 15:24:12.7379|INFO|PID=10660|EfetuarEstorno >>>Pagamento não localizado no banco de dados >>> "97"",
+...
+]
+}
+```
+
+## Pagamentos
+
+### Criar Pagamento
+
+Registra um novo pagamento no sistema, e efetua a requisição para um servidor terceiro. Havendo instabilidade em um, outro servidor sofrerá a requisição para criação de pagamentos. Gera um log em casos de falha.
+
+**Requisição:**
+```bash
+curl -X 'POST' \
+'https://localhost:7001/payments' \
+-H 'accept: application/json' \
+-H 'Authorization: Bearer <seu-token-aqui>' \
+-H 'Content-Type: application/json' \
+-d '{ 
+"amount": 0, 
+"currency": "string", 
+"description": "string",
+"type": "string",
+"number": "string",
+"holderName": "string",
+"cvv": "string",
+"expirationDate": "string",
+"installments": 0
+}'
+```
+**Resposta:**
+```json
+{
+"id": "98",
+"status": "status 98",
+"originalAmount": "39",
+"currency": "string",
+"cardId": "cardId 98"
+}
+```
+
+---
+
+### Consultar Pagamento por ID
+
+Retorna os detalhes de um pagamento específico. Usa banco de dados para identificar o fornecedor correto, e consulta em seu devido servidor. Gera um log em casos de falha.
+
+**Requisição:**
+```bash
+curl -X 'GET'
+'https://localhost:7001/payments/98' \
+-H 'accept: application/json' \
+-H 'Authorization: Bearer <seu-token-aqui>' 
+```
+**Resposta:**
+```json
+{
+"id": "98",
+"status": "status 98",
+"originalAmount": "39",
+"currency": "string",
+"cardId": "cardId 98"
+}
+```
+
+---
+
+### Atualizar Pagamento
+
+Atualiza dados de um pagamento existente. Usa banco de dados para identificar o fornecedor correto, e efetua a alteração de estado em seu devido servidor, e em banco de dados. Gera um log em casos de falha.
+
+**Requisição:**
+```bash
+curl -X 'PUT' \
+'https://localhost:7001/payments/98' \
+-H 'accept: application/json' \
+-H 'Authorization: Bearer <seu-token-aqui>' \
+-H 'Content-Type: application/json' \
+-d '{
+"amount": 1000
+}'
+```
+**Resposta:**
+```json
+{
+"id": "98",
+"status": "status 98",
+"originalAmount": "39",
+"currency": "string",
+"cardId": "cardId 98"
+}
+```
