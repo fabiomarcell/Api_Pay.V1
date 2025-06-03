@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  apipay:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "7001:7001"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:7001
+
+      - Logging__LogLevel__Default=Information
+      - Logging__LogLevel__Microsoft.AspNetCore=Warning
+
+      - Variaveis__JWT=Vmtaa2MyUlhSa2hTVjJSU1RXMW9iMXBITVZaYU1VNXpXa1pXU2xGVU1Eaz0=
+
+      - MongoDbSettings__ConnectionString=mongodb://mongo:27017
+      - MongoDbSettings__DatabaseName=ApiPay
+
+      - AllowedHosts=*
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:7.0
+    container_name: mongodb-ApiPay
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: ApiPay
+
+volumes:
+  mongo-data:
